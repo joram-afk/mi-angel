@@ -195,7 +195,7 @@ body {
 }
 
 .letter h2 {
-    color: #e53935;
+    color: #ffffff;
     font-size: 1.3rem;
     margin-top: 0;
     text-align: center;
@@ -204,7 +204,7 @@ body {
 .letter p {
     font-size: 0.9rem;
     line-height: 1.5;
-    color: #555555;
+    color: #ffffff;
     margin: 10px 0;
 }
 
