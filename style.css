@@ -145,8 +145,8 @@ body {
 
 .envelope {
     position: relative;
-    width: 320px;
-    height: 220px;
+    width: 380px;
+    height: 320px;
     background-color: #d32f2f;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -160,9 +160,9 @@ body {
     left: 0;
     width: 0;
     height: 0;
-    border-left: 160px solid transparent;
-    border-right: 160px solid transparent;
-    border-top: 130px solid #b71c1c;
+    border-left: 190px solid transparent;
+    border-right: 190px solid transparent;
+    border-top: 200px solid #b71c1c;
     transform-origin: top;
     transition: transform 0.5s ease 0.2s, z-index 0.2s ease 0.2s;
     z-index: 3;
@@ -182,7 +182,7 @@ body {
     position: absolute;
     left: 15px;
     bottom: 10px;
-    width: 290px;
+    width: 350px;
     background: #8a00c2;
     border-radius: 8px;
     padding: 20px;
