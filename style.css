@@ -233,7 +233,7 @@ body {
 }
 
 .envelope-wrapper:hover .letter {
-    transform: translateY(-280px);
+    transform: translateY(-100px);
     z-index: 5;
 }
 
