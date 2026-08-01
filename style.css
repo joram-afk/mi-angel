@@ -183,6 +183,8 @@ body {
     left: 15px;
     bottom: 10px;
     width: 350px;
+    height: 350px;
+    overflow-y: auto;
     background: #8a00c2;
     border-radius: 8px;
     padding: 20px;
