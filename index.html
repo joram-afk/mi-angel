@@ -1,33 +1,129 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For You, Angel</title>
-    <!-- Inside the <head> tag of both index.html and envelope.html -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>mi-angel — Login / Register</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Background rotating love ring -->
-    <div class="love-aura"></div>
+  <main class="container">
+    <h1>Welcome to mi-angel</h1>
+    <p class="lead">Please log in or register to continue.</p>
 
-    <div class="container">
-        <!-- Rotating color heart icon -->
-        <div class="rotating-heart">💖</div>
-
-        <h1 class="message">To my friend</h1>
-        <div class="flowers">
-            <span class="flower" style="--delay: 0s;">🧚</span>
-            <span class="flower" style="--delay: 1s;">A</span>
-            <span class="flower" style="--delay: 2s;">n</span>
-            <span class="flower" style="--delay: 1.5s;">🌹</span>
-            <span class="flower" style="--delay: 0.5s;">e</span>
-            <span class="flower" style="--delay: 2.5s;">l</span>
-            <span class="flower" style="--delay: 1.2s;">👼</span>
-        </div>
-
-        <a href="404.html" class="open-btn">Read this babe 💌</a>
+    <div class="actions">
+      <button id="open-login" class="btn">Log in</button>
+      <button id="open-register" class="btn btn-outline">Register</button>
     </div>
+
+    <!-- Login Modal -->
+    <div id="modal-login" class="modal" aria-hidden="true" role="dialog" aria-labelledby="login-title">
+      <div class="modal-panel">
+        <button class="modal-close" data-close>&times;</button>
+        <h2 id="login-title">Log in</h2>
+        <form id="login-form" class="form">
+          <label for="login-email">Email</label>
+          <input id="login-email" name="email" type="email" required>
+
+          <label for="login-password">Password</label>
+          <input id="login-password" name="password" type="password" required>
+
+          <div class="form-actions">
+            <button type="submit" class="btn">Sign in</button>
+            <button type="button" class="btn btn-link" data-switch="register">Create account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="modal-register" class="modal" aria-hidden="true" role="dialog" aria-labelledby="register-title">
+      <div class="modal-panel">
+        <button class="modal-close" data-close>&times;</button>
+        <h2 id="register-title">Create account</h2>
+        <form id="register-form" class="form">
+          <label for="reg-name">Full name</label>
+          <input id="reg-name" name="name" type="text" required>
+
+          <label for="reg-email">Email</label>
+          <input id="reg-email" name="email" type="email" required>
+
+          <label for="reg-password">Password</label>
+          <input id="reg-password" name="password" type="password" minlength="6" required>
+
+          <div class="form-actions">
+            <button type="submit" class="btn">Register</button>
+            <button type="button" class="btn btn-link" data-switch="login">Already have an account?</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Simple modal handling
+    const openLoginBtn = document.getElementById('open-login');
+    const openRegisterBtn = document.getElementById('open-register');
+    const loginModal = document.getElementById('modal-login');
+    const registerModal = document.getElementById('modal-register');
+
+    function openModal(modal) {
+      modal.setAttribute('aria-hidden', 'false');
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(modal) {
+      modal.setAttribute('aria-hidden', 'true');
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    openLoginBtn.addEventListener('click', () => openModal(loginModal));
+    openRegisterBtn.addEventListener('click', () => openModal(registerModal));
+
+    document.querySelectorAll('[data-close]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const modal = e.target.closest('.modal');
+        closeModal(modal);
+      });
+    });
+
+    // Switch between modals
+    document.querySelectorAll('[data-switch]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.target.getAttribute('data-switch');
+        if (target === 'register') {
+          closeModal(loginModal);
+          openModal(registerModal);
+        } else {
+          closeModal(registerModal);
+          openModal(loginModal);
+        }
+      });
+    });
+
+    // Close on overlay click or Escape
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal(modal);
+      });
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') document.querySelectorAll('.modal.open').forEach(closeModal);
+    });
+
+    // Placeholder submit handlers
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Login submitted (client-side demo).');
+      closeModal(loginModal);
+    });
+    document.getElementById('register-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Registration submitted (client-side demo).');
+      closeModal(registerModal);
+    });
+  </script>
 </body>
 </html>
