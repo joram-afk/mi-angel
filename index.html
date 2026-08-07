@@ -3,127 +3,108 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>mi-angel — Login / Register</title>
+  <title>mi-angel — A Little Question</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main class="container">
-    <h1>Welcome to mi-angel</h1>
-    <p class="lead">Please log in or register to continue.</p>
+    <div class="lovely-panel" role="dialog" aria-labelledby="q-title">
+      <h1 id="q-title">A little question for you 💖</h1>
+      <p class="lead">Open your heart and choose... or try to catch it!</p>
 
-    <div class="actions">
-      <button id="open-login" class="btn">Log in</button>
-      <button id="open-register" class="btn btn-outline">Register</button>
-    </div>
+      <div class="question">Do you love me?</div>
 
-    <!-- Login Modal -->
-    <div id="modal-login" class="modal" aria-hidden="true" role="dialog" aria-labelledby="login-title">
-      <div class="modal-panel">
-        <button class="modal-close" data-close>&times;</button>
-        <h2 id="login-title">Log in</h2>
-        <form id="login-form" class="form">
-          <label for="login-email">Email</label>
-          <input id="login-email" name="email" type="email" required>
-
-          <label for="login-password">Password</label>
-          <input id="login-password" name="password" type="password" required>
-
-          <div class="form-actions">
-            <button type="submit" class="btn">Sign in</button>
-            <button type="button" class="btn btn-link" data-switch="register">Create account</button>
-          </div>
-        </form>
+      <div class="answers" id="answers">
+        <button id="yes-btn" class="btn playful" aria-label="Yes">Yes</button>
+        <button id="no-btn" class="btn calm" aria-label="No">No</button>
       </div>
+
+      <p class="hint">Tip: try to click Yes — it likes to play!</p>
     </div>
-
-    <!-- Register Modal -->
-    <div id="modal-register" class="modal" aria-hidden="true" role="dialog" aria-labelledby="register-title">
-      <div class="modal-panel">
-        <button class="modal-close" data-close>&times;</button>
-        <h2 id="register-title">Create account</h2>
-        <form id="register-form" class="form">
-          <label for="reg-name">Full name</label>
-          <input id="reg-name" name="name" type="text" required>
-
-          <label for="reg-email">Email</label>
-          <input id="reg-email" name="email" type="email" required>
-
-          <label for="reg-password">Password</label>
-          <input id="reg-password" name="password" type="password" minlength="6" required>
-
-          <div class="form-actions">
-            <button type="submit" class="btn">Register</button>
-            <button type="button" class="btn btn-link" data-switch="login">Already have an account?</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
   </main>
 
   <script>
-    // Simple modal handling
-    const openLoginBtn = document.getElementById('open-login');
-    const openRegisterBtn = document.getElementById('open-register');
-    const loginModal = document.getElementById('modal-login');
-    const registerModal = document.getElementById('modal-register');
+    // Playful moving "Yes" button
+    (function(){
+      const answers = document.getElementById('answers');
+      const yes = document.getElementById('yes-btn');
+      const no = document.getElementById('no-btn');
 
-    function openModal(modal) {
-      modal.setAttribute('aria-hidden', 'false');
-      modal.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeModal(modal) {
-      modal.setAttribute('aria-hidden', 'true');
-      modal.classList.remove('open');
-      document.body.style.overflow = '';
-    }
+      // Make container relative so yes can be positioned absolutely inside it
+      answers.style.position = 'relative';
 
-    openLoginBtn.addEventListener('click', () => openModal(loginModal));
-    openRegisterBtn.addEventListener('click', () => openModal(registerModal));
+      // Initial styles for yes
+      yes.style.position = 'absolute';
+      yes.style.left = '16px';
+      yes.style.top = '0px';
+      yes.style.transition = 'left 180ms ease, top 180ms ease, transform 120ms ease';
+      yes.style.zIndex = 2;
 
-    document.querySelectorAll('[data-close]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const modal = e.target.closest('.modal');
-        closeModal(modal);
-      });
-    });
+      // Keep 'no' static and accessible
+      no.style.position = 'relative';
+      no.style.marginLeft = '180px';
 
-    // Switch between modals
-    document.querySelectorAll('[data-switch]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const target = e.target.getAttribute('data-switch');
-        if (target === 'register') {
-          closeModal(loginModal);
-          openModal(registerModal);
-        } else {
-          closeModal(registerModal);
-          openModal(loginModal);
+      // Utility: get random position within answers area
+      function randomPos(button) {
+        const rect = answers.getBoundingClientRect();
+        const btnRect = button.getBoundingClientRect();
+        const padding = 8; // keep some space from edges
+        const maxX = rect.width - btnRect.width - padding;
+        const maxY = rect.height - btnRect.height - padding;
+        const x = Math.max(padding, Math.floor(Math.random() * (Math.max(1, maxX))));
+        const y = Math.max(padding, Math.floor(Math.random() * (Math.max(1, maxY))));
+        return {x,y};
+      }
+
+      // Move the yes button to a random spot
+      function moveYes() {
+        const p = randomPos(yes);
+        yes.style.left = p.x + 'px';
+        yes.style.top = p.y + 'px';
+      }
+
+      // On mouse move, if the cursor gets close to the yes button, move it away
+      answers.addEventListener('mousemove', (e) => {
+        const btn = yes.getBoundingClientRect();
+        const dx = e.clientX - (btn.left + btn.width/2);
+        const dy = e.clientY - (btn.top + btn.height/2);
+        const dist = Math.hypot(dx, dy);
+        const threshold = 120; // px — how close before it runs
+        if (dist < threshold) {
+          moveYes();
         }
       });
-    });
 
-    // Close on overlay click or Escape
-    document.querySelectorAll('.modal').forEach(modal => {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal(modal);
+      // Also move on hover/focus/click attempt
+      yes.addEventListener('mouseenter', moveYes);
+      yes.addEventListener('focus', moveYes);
+
+      // On click, if the button happens to be clicked, show a loving message
+      yes.addEventListener('click', (e) => {
+        e.preventDefault();
+        // A sweet little reveal
+        document.body.innerHTML = `\n          <main class="container">\n            <div class="lovely-panel">\n              <h1>Yay! 😍</h1>\n              <p class="lead">I knew it — I love you too.</p>\n              <p class="small">Send this page to someone you love.</p>\n            </div>\n          </main>`;
       });
-    });
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') document.querySelectorAll('.modal.open').forEach(closeModal);
-    });
 
-    // Placeholder submit handlers
-    document.getElementById('login-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Login submitted (client-side demo).');
-      closeModal(loginModal);
-    });
-    document.getElementById('register-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Registration submitted (client-side demo).');
-      closeModal(registerModal);
-    });
+      // No button behavior — show playful cheeky response if clicked
+      no.addEventListener('click', (e) => {
+        e.preventDefault();
+        no.disabled = true;
+        no.textContent = 'Oh...';
+        no.classList.add('shrink');
+        setTimeout(() => {
+          no.textContent = 'I know you do 💕';
+          no.disabled = false;
+          no.classList.remove('shrink');
+        }, 1200);
+      });
+
+      // Ensure yes starts in a visible/random place on load
+      window.addEventListener('load', () => setTimeout(moveYes, 120));
+      // Reposition if the window resizes
+      window.addEventListener('resize', moveYes);
+
+    })();
   </script>
 </body>
 </html>
